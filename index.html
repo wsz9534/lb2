@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+	ul{
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+		.box{
+			width: 590px;/* 图片的宽高 */
+			height: 470px;
+			position: relative;/* 做了定位啦 */
+			border: 10px solid blue;
+			margin: 30px auto;
+			overflow: hidden;/* 多余的图片去掉 */
+		}
+		.imgs{
+			position: absolute;/* 决定定位 */
+			top:0;
+			left: 0;
+			display: flex;
+		}
+		.imgs img{/* 去掉那4个像素 */
+			display: block;
+			/* vertical-align: middle; */
+		}
+		.arrows span{
+			position: absolute;/* 箭头也需要定位才能放在两边 */
+			top: 215px;
+			font-size: 36px;
+			color: #fff;
+			background-color: #000;
+			width: 30px;
+			height: 40px;
+			line-height: 30px;
+			text-align: center;
+			cursor:pointer;/* 出现手的形状 */
+			opacity: 0;/* 开始不显示箭头 */
+		}
+		.box:hover .arrows span{/* 鼠标进入box的时候是半透明 */
+			opacity: .5;
+		}
+		.box .arrows span:hover{/* 鼠标进入box进入span箭头的时候是完全显示 */
+			opacity: 1;
+		}
+		.arrows .left{
+			left: 0;
+		}
+		.arrows .right{
+			right: 0;
+		}
+		.dots{
+			position: absolute;
+			bottom: 20px;/* 距低端20像素 */
+			width: 100%;
+			display: flex;
+			justify-content: center;/* 居中显示跟flex配合显示 */
+		}
+		.dots li{
+			width: 30px;
+			height: 30px;
+			line-height: 30px;/* 行高 */
+			text-align: center;/* 水平居中 */
+			background: blue;
+			border-radius:50%;
+			border: 3px solid #ddd;
+			margin: 0 2px;
+			cursor: pointer;
+		}
+		.dots .act{
+			background: red;
+			color: #fff;
+		}
+	</style>
+</head>
+<body>
+	<div id="carousel01" class="box">
+		<ul class="imgs">
+			<li><a href="#"><img src="img/1.jpg" alt="1"></a></li>
+			<li><a href="#"><img src="img/2.jpg" alt="2"></a></li>
+			<li><a href="#"><img src="img/3.jpg" alt="3"></a></li>
+			<li><a href="#"><img src="img/4.jpg" alt="4"></a></li>
+			<li><a href="#"><img src="img/5.jpg" alt="5"></a></li>
+		</ul>
+		<!-- div.arrows>span.left{&lt;}+span.right{&gt;} 这是左右箭头-->
+		<div class="arrows">
+			<span class="left">&lt;</span>
+			<span class="right">&gt;</span>
+		</div>
+		<!-- ul.dots>li{$}*5 这是圆点-->
+		<ul class="dots">
+			<li class="act">1</li>
+			<li>2</li>
+			<li>3</li>
+			<li>4</li>
+			<li>5</li>
+		</ul>
+	</div>
+	<script>
+		//轮播图的主要工作就是调整图片列表的定位或是显示、隐藏
+		//轮播图展示区域
+		var box=document.getElementById('carousel01')//轮播图的展示区域
+		var imgs=box.getElementsByClassName('imgs')[0];//图片的列表
+		var arrowl=box.getElementsByClassName('left')[0];//左箭头
+		var arrowr=box.getElementsByClassName('right')[0];//右箭头
+		var dots=box.getElementsByClassName('dots')[0];//找的时候ul，按钮容器
+		var btns=dots.getElementsByTagName('li');//按钮列表
+		var imgwidth=590;//一个图的宽度
+		var index=0;//当前显示的图片序号，从0开始,范围是【0,n-1】
+		var n=btns.length;//图片及按钮数量
+		//显示指定index对应的图片
+		function showimg(index){
+			imgs.style.left=-1*index*imgwidth+'px';
+		}
+		//指定index的按钮显示特殊样式
+		function showbtn(index){
+			//清楚全部按钮样式
+			for(var i=0;i<btns.length;i++){
+				// btns[i].removeAttribute('class');
+				btns[i].className='';
+			}
+			btns[index].className='act';
+		}
+		for(var i=0;i<btns.length;i++){
+			btns[i].idx=i;//记住他的序号
+			btns[i].onclick=function(){
+			  	index=this.idx;//知道第几号
+				showbtn(index);//显示按钮
+				showimg(index);//显示图片
+			}
+		}
+		arrowr.onclick=function(){
+			if(index<n-1){//n-1=4是4之后再+1=5啦，之后不能再+拉;不-1的话会出来一个空白区域。；序号的边界判断，决定显示下一个还是返回第一个
+				index++;
+			}else{
+				index=0;
+			}
+			showimg(index);
+			showbtn(index);
+
+			/*imgs.style.left=-1*index*imgwidth+'px';*/
+		}
+		arrowl.onclick=function(){
+			index=index>0?index-1:n-1;//序号的边界判断
+			showimg(index);
+			showbtn(index);
+			/*imgs.style.left=-1*index*imgwidth
+			 'px';*/
+		}
+	</script>
+</body>
+</html>
